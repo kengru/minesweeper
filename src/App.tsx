@@ -43,9 +43,16 @@ export enum PlayingState {
   Playing = 1
 }
 
+export type Score = {
+  name: string;
+  time: number;
+  level: Levels;
+};
+
 interface State {
   level: Levels;
   playing: PlayingState;
+  scores: Score[];
 };
 
 function reducer(prev: State, msg: Message): State {
@@ -67,7 +74,19 @@ function reducer(prev: State, msg: Message): State {
 
 const initialState: State = {
   level: Levels.Beginner,
-  playing: PlayingState.NotPlaying
+  playing: PlayingState.NotPlaying,
+  scores: [
+    {
+      name: "ken",
+      time: 12,
+      level: Levels.Beginner
+    },
+    {
+      name: "laura",
+      time: 15,
+      level: Levels.Beginner
+    }
+  ]
 };
 
 export const App = () => {
@@ -83,7 +102,7 @@ export const App = () => {
       <main className={css(styles.main)}>
         <Settings level={state.level} changeDifficulty={changeDifficulty} />
         <Game level={state.level}/>
-        <Highscores />
+        <Highscores level={state.level} scores={state.scores}/>
       </main>
       <footer className={css(styles.footer)}>
         <h6>kengru</h6>
