@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 export enum Levels {
   Beginner = "Beginner",
   Intermediate = "Intermediate",
-  Advanced = "Advanced"
+  Expert = "Expert"
 };
 
 export enum PlayingState {
@@ -96,12 +96,16 @@ export const App = () => {
     dispatch({ type: "chgLvl", action: level})
   }, []);
 
+  const changePlayState = useCallback((playState: PlayingState) => {
+    dispatch({ type: "chgPlay", action: playState})
+  }, []);
+
   return (
     <div className={css(styles.app)}>
       <header className={css(styles.header)}>Minesweeper</header>
       <main className={css(styles.main)}>
         <Settings level={state.level} changeDifficulty={changeDifficulty} />
-        <Game level={state.level}/>
+        <Game level={state.level} changePlayingState={changePlayState}/>
         <Highscores level={state.level} scores={state.scores}/>
       </main>
       <footer className={css(styles.footer)}>
