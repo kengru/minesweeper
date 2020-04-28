@@ -1,5 +1,9 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useCallback } from 'react';
 import { StyleSheet, css } from "aphrodite";
+import { Settings } from "./components/Settings";
+import { Game } from "./components/Game";
+import { Highscores } from "./components/Highscores";
+
 import { changeLevel, changePState } from "./utils/messages";
 
 type Message = changeLevel | changePState;
@@ -16,6 +20,15 @@ const styles = StyleSheet.create({
     fontSize: "3em",
     justifyContent: "center",
     alignItems: "center"
+  },
+  main: {
+    display: "flex",
+    height: "75%"
+  },
+  footer: {
+    display: "flex",
+    height: "10%",
+    margin: "2em"
   }
 });
 
@@ -60,12 +73,21 @@ const initialState: State = {
 export const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const changeDifficulty = useCallback((level: Levels) => {
+    dispatch({ type: "chgLvl", action: level})
+  }, []);
+
   return (
     <div className={css(styles.app)}>
       <header className={css(styles.header)}>Minesweeper</header>
-      {/* <main className={css(styles.main)}>
-
-      </main> */}
+      <main className={css(styles.main)}>
+        <Settings changeDifficulty={changeDifficulty} />
+        <Game level={state.level}/>
+        <Highscores />
+      </main>
+      <footer className={css(styles.footer)}>
+        <h6>kengru</h6>
+      </footer>
     </div>
   );
 }
