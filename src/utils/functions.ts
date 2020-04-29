@@ -2,7 +2,15 @@ const outBounds = (x: number, y: number, gridW: number, gridH: number) => {
   return x < 0 || y < 0 || x >= gridW || y >= gridH;
 }
 
-export const createTwoDArray = (x: number, y: number): number[][] => {
+export const create2DNumber = (x: number, y: number): number[][] => {
+  const newArray = new Array(x);
+  for (let i = 0; i < x; i++) {
+    newArray[i] = new Array(y);
+  }
+  return newArray
+}
+
+export const create2DBoolean = (x: number, y: number): boolean[][] => {
   const newArray = new Array(x);
   for (let i = 0; i < x; i++) {
     newArray[i] = new Array(y);
@@ -19,4 +27,19 @@ export const calculateNear = (mines: number[][], x: number, y: number, gridW: nu
     }
   }
   return i;
+}
+
+export const reveal = (revealed: boolean[][], mines: number[][], x: number, y: number, gridW: number, gridH: number): void => {
+  if (outBounds(x,y, gridW, gridH)) return;
+  if (revealed[x][y]) return;
+  revealed[x][y] = true;
+  if (calculateNear(mines, x, y, gridW, gridH) !== 0) return;
+  reveal(revealed, mines, x-1,y-1, gridW, gridH);
+  reveal(revealed, mines, x-1, y+1, gridW, gridH);
+  reveal(revealed, mines, x+1, y-1, gridW, gridH);
+  reveal(revealed, mines, x+1, y+1, gridW, gridH);
+  reveal(revealed, mines, x-1, y, gridW, gridH);
+  reveal(revealed, mines, x+1, y, gridW, gridH);
+  reveal(revealed, mines, x, y-1, gridW, gridH);
+  reveal(revealed, mines, x, y+1, gridW, gridH);
 }
