@@ -14,9 +14,9 @@ export const IntermediateState: State = {
   gridH: 16,
   gridW: 16,
   numMines: 40,
-  mines: create2DNumber(9, 9),
-  flags: create2DBoolean(9, 9),
-  revealed: create2DBoolean(9, 9)
+  mines: create2DNumber(16, 16),
+  flags: create2DBoolean(16, 16),
+  revealed: create2DBoolean(16, 16)
 }
 
 export const ExpertState: State = {

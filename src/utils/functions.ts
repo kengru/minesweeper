@@ -5,15 +5,31 @@ const outBounds = (x: number, y: number, gridW: number, gridH: number) => {
 export const create2DNumber = (x: number, y: number): number[][] => {
   const newArray = new Array(x);
   for (let i = 0; i < x; i++) {
-    newArray[i] = new Array(y);
+    const yArray = [];
+    for (let j = 0; j < y; j++) {
+      yArray.push(0);
+    }
+    newArray[i] = yArray;
   }
   return newArray
+}
+
+export const fillMines = (mines: number[][], amount: number): number[][] => {
+  let i = 0;
+  while (i < amount) {
+    let x = Math.random() * ;
+    let y = Math.random();
+  }
 }
 
 export const create2DBoolean = (x: number, y: number): boolean[][] => {
   const newArray = new Array(x);
   for (let i = 0; i < x; i++) {
-    newArray[i] = new Array(y);
+    const yArray = [];
+    for (let j = 0; j < y; j++) {
+      yArray.push(false);
+    }
+    newArray[i] = yArray;
   }
   return newArray
 }

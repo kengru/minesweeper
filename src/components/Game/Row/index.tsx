@@ -16,7 +16,7 @@ interface Props {
 
 export const Row = (props: Props) => {
   const spaces = [...Array(props.columns).keys()].map(element => (
-    <Space x={props.width} y={element} />
+    <Space key={element} x={props.width} y={element} />
   ));
 
   return (

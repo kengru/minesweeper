@@ -43,7 +43,7 @@ export interface State {
 export const Game = (props: Props) => {
   const [state, setState] = useState<State>(BeginnerState);
   const rows = [...Array(state.gridH).keys()].map(element => (
-    <Row width={element} columns={state.gridW} />
+    <Row key={element} width={element} columns={state.gridW} />
   ));
 
   useEffect(() => {
