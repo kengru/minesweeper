@@ -4,7 +4,11 @@ import { StyleSheet, css } from "aphrodite";
 import { Levels, PlayingState } from "../../App";
 import { Row } from "./Row";
 import { calculateNear } from "../../utils/functions";
-import { BeginnerState, IntermediateState, ExpertState } from "../../utils/difficulty-data";
+import {
+  BeginnerState,
+  IntermediateState,
+  ExpertState
+} from "../../utils/difficulty-data";
 
 const styles = StyleSheet.create({
   game: {
@@ -22,14 +26,14 @@ const styles = StyleSheet.create({
   },
   grid: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column"
   }
 });
 
 interface Props {
   level: Levels;
   changePlayingState: (playState: PlayingState) => void;
-};
+}
 
 export interface State {
   gridW: number;
@@ -38,16 +42,16 @@ export interface State {
   mines: number[][];
   flags: boolean[][];
   revealed: boolean[][];
-};
+}
 
 export const Game = (props: Props) => {
   const [state, setState] = useState<State>(BeginnerState);
-  const rows = [...Array(state.gridH).keys()].map(element => (
+  const rows = [...Array(state.gridH).keys()].map((element) => (
     <Row key={element} width={element} columns={state.gridW} />
   ));
 
   useEffect(() => {
-    switch(props.level) {
+    switch (props.level) {
       case Levels.Beginner:
         setState(BeginnerState);
         break;
@@ -63,10 +67,13 @@ export const Game = (props: Props) => {
 
   return (
     <div className={css(styles.game)}>
-      <button className={css(styles.startButton)} onClick={() => props.changePlayingState(PlayingState.Playing)}>Start</button>
-      <div className={css(styles.grid)}>
-        {rows}
-      </div>
+      <button
+        className={css(styles.startButton)}
+        onClick={() => props.changePlayingState(PlayingState.Playing)}
+      >
+        Start
+      </button>
+      <div className={css(styles.grid)}>{rows}</div>
     </div>
   );
 };

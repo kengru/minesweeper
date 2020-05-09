@@ -18,9 +18,5 @@ interface Props {
 }
 
 export const Space = (props: Props) => {
-  return (
-    <div className={css(styles.space, styles.default)}>
-      
-    </div>
-  );
+  return <div className={css(styles.space, styles.default)}></div>;
 };

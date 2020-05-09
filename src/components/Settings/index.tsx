@@ -6,7 +6,7 @@ import { Levels } from "../../App";
 const styles = StyleSheet.create({
   settings: {
     height: "100%",
-    width: "15%",
+    width: "15%"
   },
   form: {
     display: "flex",
@@ -14,21 +14,21 @@ const styles = StyleSheet.create({
     marginLeft: "2em",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "flex-start",
+    alignItems: "flex-start"
   },
   radio: {
-    margin: "2em 0em 2em 0em",
+    margin: "2em 0em 2em 0em"
   },
   radioLabel: {
     display: "flex",
     alignItems: "center",
-    fontSize: "1.5em",
+    fontSize: "1.5em"
   },
   radioInput: {
     height: "2.2em",
     width: "2.2em",
-    margin: "0em 1em 0em 0em",
-  },
+    margin: "0em 1em 0em 0em"
+  }
 });
 
 interface Props {

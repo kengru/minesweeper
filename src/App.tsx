@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback } from 'react';
+import React, { useReducer, useCallback } from "react";
 import { StyleSheet, css } from "aphrodite";
 import { Settings } from "./components/Settings";
 import { Game } from "./components/Game";
@@ -28,7 +28,9 @@ const styles = StyleSheet.create({
   footer: {
     display: "flex",
     height: "10%",
-    margin: "2em"
+    justifyContent: "flex-start",
+    alignItems: "center",
+    margin: "0em 2em 0em 2em"
   }
 });
 
@@ -36,7 +38,7 @@ export enum Levels {
   Beginner = "Beginner",
   Intermediate = "Intermediate",
   Expert = "Expert"
-};
+}
 
 export enum PlayingState {
   NotPlaying = 0,
@@ -53,14 +55,14 @@ interface State {
   level: Levels;
   playing: PlayingState;
   scores: Score[];
-};
+}
 
 function reducer(prev: State, msg: Message): State {
-  switch(msg.type) {
+  switch (msg.type) {
     case "chgLvl":
       return {
         ...prev,
-        level: msg.action,
+        level: msg.action
       };
     case "chgPlay":
       return {
@@ -93,11 +95,11 @@ export const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const changeDifficulty = useCallback((level: Levels) => {
-    dispatch({ type: "chgLvl", action: level})
+    dispatch({ type: "chgLvl", action: level });
   }, []);
 
   const changePlayState = useCallback((playState: PlayingState) => {
-    dispatch({ type: "chgPlay", action: playState})
+    dispatch({ type: "chgPlay", action: playState });
   }, []);
 
   return (
@@ -105,12 +107,12 @@ export const App = () => {
       <header className={css(styles.header)}>Minesweeper</header>
       <main className={css(styles.main)}>
         <Settings level={state.level} changeDifficulty={changeDifficulty} />
-        <Game level={state.level} changePlayingState={changePlayState}/>
-        <Highscores level={state.level} scores={state.scores}/>
+        <Game level={state.level} changePlayingState={changePlayState} />
+        <Highscores level={state.level} scores={state.scores} />
       </main>
       <footer className={css(styles.footer)}>
         <h6>kengru</h6>
       </footer>
     </div>
   );
-}
+};

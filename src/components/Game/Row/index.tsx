@@ -12,16 +12,12 @@ const styles = StyleSheet.create({
 interface Props {
   width: number;
   columns: number;
-};
+}
 
 export const Row = (props: Props) => {
-  const spaces = [...Array(props.columns).keys()].map(element => (
+  const spaces = [...Array(props.columns).keys()].map((element) => (
     <Space key={element} x={props.width} y={element} />
   ));
 
-  return (
-    <div className={css(styles.row)}>
-      {spaces}
-    </div>
-  );
+  return <div className={css(styles.row)}>{spaces}</div>;
 };
