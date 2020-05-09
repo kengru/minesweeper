@@ -22,7 +22,6 @@ export const fillMines = (mines: number[][], amount: number, gridW: number, grid
   while (i < amount) {
     const x = Math.floor(Math.random() * gridW);
     const y = Math.floor(Math.random() * gridH);
-    if (gridW === 9) console.log(filled);
     if (filled[x][y] === 1) continue;
     filled[x][y] = 1;
     i++;

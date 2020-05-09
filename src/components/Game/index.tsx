@@ -50,6 +50,10 @@ export const Game = (props: Props) => {
     <Row key={element} width={element} columns={state.gridW} />
   ));
 
+  const preventContext = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+  };
+
   useEffect(() => {
     switch (props.level) {
       case Levels.Beginner:
@@ -66,7 +70,7 @@ export const Game = (props: Props) => {
   }, [props.level]);
 
   return (
-    <div className={css(styles.game)}>
+    <div onContextMenu={preventContext} className={css(styles.game)}>
       <button
         className={css(styles.startButton)}
         onClick={() => props.changePlayingState(PlayingState.Playing)}
