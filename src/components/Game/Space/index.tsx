@@ -1,6 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { StyleSheet, css } from "aphrodite";
 
+import Flag from "../../../images/flagIcon.svg";
+
 const styles = StyleSheet.create({
   space: {
     margin: "0.08em",
@@ -11,16 +13,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#BDBDBD"
   },
   flag: {
-    backgroundColor: ""
+    backgroundImage: `url(${Flag})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat"
   },
   revealed: {
-    backgroundColor: ""
+    backgroundColor: "#E3DCDC"
   }
 });
 
 interface Props {
   x: number;
   y: number;
+  setFlag: (x: number, y: number) => void;
 }
 
 export const Space = (props: Props) => {
@@ -30,12 +35,15 @@ export const Space = (props: Props) => {
   const leftClicked = useCallback(() => {
     console.log(`LeftClicked: ${props.x} ${props.y}`);
   }, [props.x, props.y]);
+
   const rightClicked = useCallback(
     (event) => {
       event.preventDefault();
+      props.setFlag(props.x, props.y);
+      setFlag(!flag);
       console.log(`RightClicked: ${props.x} ${props.y}`);
     },
-    [props.x, props.y]
+    [flag, props]
   );
 
   return (
@@ -45,8 +53,8 @@ export const Space = (props: Props) => {
       className={css(
         styles.space,
         styles.default,
-        flag ? styles.flag : {},
-        revealed ? styles.revealed : {}
+        flag ? styles.flag : styles.space,
+        revealed ? styles.revealed : styles.space
       )}
     ></div>
   );

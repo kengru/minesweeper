@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, css } from "aphrodite";
+import { cloneDeep } from "lodash";
 
 import { Levels, PlayingState } from "../../App";
 import { Row } from "./Row";
@@ -46,13 +47,6 @@ export interface State {
 
 export const Game = (props: Props) => {
   const [state, setState] = useState<State>(BeginnerState);
-  const rows = [...Array(state.gridH).keys()].map((element) => (
-    <Row key={element} width={element} columns={state.gridW} />
-  ));
-
-  const preventContext = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-  };
 
   useEffect(() => {
     switch (props.level) {
@@ -69,13 +63,46 @@ export const Game = (props: Props) => {
     }
   }, [props.level]);
 
+  const setFlag = (x: number, y: number) => {
+    const newFlags = cloneDeep(state.flags);
+    newFlags[x][y] = !newFlags[x][y];
+    setState({
+      ...state,
+      flags: newFlags
+    });
+  };
+
+  const resetGame = () => {
+    props.changePlayingState(PlayingState.Playing)
+    switch (props.level) {
+      case Levels.Beginner:
+        setState(BeginnerState);
+        break;
+      case Levels.Intermediate:
+        setState(IntermediateState);
+        break;
+      case Levels.Expert:
+        setState(ExpertState);
+        break;
+      default:
+    }
+  }
+
+  const preventContext = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+  };
+
+  const rows = [...Array(state.gridH).keys()].map((element) => (
+    <Row key={element} width={element} columns={state.gridW} setFlag={setFlag} />
+  ));
+
   return (
     <div onContextMenu={preventContext} className={css(styles.game)}>
       <button
         className={css(styles.startButton)}
-        onClick={() => props.changePlayingState(PlayingState.Playing)}
+        onClick={() => resetGame()}
       >
-        Start
+        Restart
       </button>
       <div className={css(styles.grid)}>{rows}</div>
     </div>
