@@ -72,21 +72,24 @@ export const Game = (props: Props) => {
     });
   };
 
-  const checkMine = useCallback((x: number, y: number) => {
-    if (state.mines[x][y]) {
-      console.log("explosions");
-    } else {
-      const newRevealed = cloneDeep(state.revealed);
-      newRevealed[x][y] = true;
-      setState({
-        ...state,
-        revealed: newRevealed
-      });
-    }
-  }, [state]);
+  const checkMine = useCallback(
+    (x: number, y: number) => {
+      if (state.mines[x][y]) {
+        console.log("explosions");
+      } else {
+        const newRevealed = cloneDeep(state.revealed);
+        newRevealed[x][y] = true;
+        setState({
+          ...state,
+          revealed: newRevealed
+        });
+      }
+    },
+    [state]
+  );
 
   const resetGame = () => {
-    props.changePlayingState(PlayingState.Playing)
+    props.changePlayingState(PlayingState.Playing);
     switch (props.level) {
       case Levels.Beginner:
         setState(BeginnerState);
@@ -99,22 +102,28 @@ export const Game = (props: Props) => {
         break;
       default:
     }
-  }
+  };
 
   const preventContext = (event: { preventDefault: () => void }) => {
     event.preventDefault();
   };
 
   const rows = [...Array(state.gridH).keys()].map((element) => (
-    <Row key={element} width={element} columns={state.gridW} setFlag={setFlag} />
+    <Row
+      key={element}
+      width={element}
+      columns={state.gridW}
+      mines={state.mines}
+      flags={state.flags}
+      revealed={state.revealed}
+      checkMine={checkMine}
+      setFlag={setFlag}
+    />
   ));
 
   return (
     <div onContextMenu={preventContext} className={css(styles.game)}>
-      <button
-        className={css(styles.startButton)}
-        onClick={() => resetGame()}
-      >
+      <button className={css(styles.startButton)} onClick={() => resetGame()}>
         Restart
       </button>
       <div className={css(styles.grid)}>{rows}</div>

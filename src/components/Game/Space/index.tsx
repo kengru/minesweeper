@@ -25,25 +25,28 @@ const styles = StyleSheet.create({
 interface Props {
   x: number;
   y: number;
+  mine: number;
+  flag: boolean;
+  revealed: boolean;
+  checkMine: (x: number, y: number) => void;
   setFlag: (x: number, y: number) => void;
 }
 
 export const Space = (props: Props) => {
-  const [flag, setFlag] = useState(false);
-  const [revealed, setRevealed] = useState(false);
+  const { x, y, mine, flag, revealed, checkMine, setFlag } = props;
 
   const leftClicked = useCallback(() => {
-    console.log(`LeftClicked: ${props.x} ${props.y}`);
-  }, [props.x, props.y]);
+    checkMine(x, y);
+    console.log(`LeftClicked: ${x} ${y}`);
+  }, [x, y]);
 
   const rightClicked = useCallback(
     (event) => {
       event.preventDefault();
-      props.setFlag(props.x, props.y);
-      setFlag(!flag);
-      console.log(`RightClicked: ${props.x} ${props.y}`);
+      setFlag(x, y);
+      console.log(`RightClicked: ${x} ${y}`);
     },
-    [flag, props]
+    [x, y, setFlag]
   );
 
   return (
