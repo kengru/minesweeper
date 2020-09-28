@@ -21,9 +21,11 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   startButton: {
+    margin: "1em",
     height: "5%",
-    width: "10%",
-    fontSize: "1.2em"
+    width: "6%",
+    fontSize: "1.2em",
+    justifySelf: "flex-end"
   },
   grid: {
     display: "flex",
@@ -191,10 +193,10 @@ export const Game = (props: Props) => {
 
   return (
     <div onContextMenu={preventContext} className={css(styles.game)}>
+      <div className={css(styles.grid)}>{rows}</div>
       <button className={css(styles.startButton)} onClick={() => resetGame()}>
         Restart
       </button>
-      <div className={css(styles.grid)}>{rows}</div>
     </div>
   );
 };

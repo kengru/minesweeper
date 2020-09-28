@@ -8,7 +8,7 @@ export const BeginnerState: State = {
   mines: fillMines(create2DNumber(9, 9), 10, 9, 9),
   flags: create2DBoolean(9, 9),
   revealed: create2DBoolean(9, 9)
-}
+};
 
 export const IntermediateState: State = {
   gridH: 16,
@@ -17,13 +17,13 @@ export const IntermediateState: State = {
   mines: fillMines(create2DNumber(16, 16), 40, 16, 16),
   flags: create2DBoolean(16, 16),
   revealed: create2DBoolean(16, 16)
-}
+};
 
 export const ExpertState: State = {
   gridH: 16,
   gridW: 30,
   numMines: 99,
-  mines: fillMines(create2DNumber(16, 30), 99, 16, 30),
-  flags: create2DBoolean(9, 9),
-  revealed: create2DBoolean(9, 9)
-}
+  mines: fillMines(create2DNumber(30, 16), 99, 30, 16),
+  flags: create2DBoolean(30, 16),
+  revealed: create2DBoolean(30, 16)
+};
