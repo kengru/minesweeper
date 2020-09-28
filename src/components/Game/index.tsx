@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, css } from "aphrodite";
 import { cloneDeep } from "lodash";
 
@@ -71,6 +71,19 @@ export const Game = (props: Props) => {
       flags: newFlags
     });
   };
+
+  const checkMine = useCallback((x: number, y: number) => {
+    if (state.mines[x][y]) {
+      console.log("explosions");
+    } else {
+      const newRevealed = cloneDeep(state.revealed);
+      newRevealed[x][y] = true;
+      setState({
+        ...state,
+        revealed: newRevealed
+      });
+    }
+  }, [state]);
 
   const resetGame = () => {
     props.changePlayingState(PlayingState.Playing)
