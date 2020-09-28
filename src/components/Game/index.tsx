@@ -4,7 +4,7 @@ import { cloneDeep } from "lodash";
 
 import { Levels, PlayingState } from "../../App";
 import { Row } from "./Row";
-import { calculateNear } from "../../utils/functions";
+import { reveal } from "../../utils/functions";
 import {
   BeginnerState,
   IntermediateState,
@@ -77,8 +77,14 @@ export const Game = (props: Props) => {
       if (state.mines[x][y]) {
         console.log("explosions");
       } else {
-        const newRevealed = cloneDeep(state.revealed);
-        newRevealed[x][y] = true;
+        const newRevealed = reveal(
+          cloneDeep(state.revealed),
+          state.mines,
+          x,
+          y,
+          state.gridW,
+          state.gridH
+        );
         setState({
           ...state,
           revealed: newRevealed

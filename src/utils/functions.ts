@@ -2,7 +2,7 @@ import { cloneDeep } from "lodash";
 
 const outBounds = (x: number, y: number, gridW: number, gridH: number) => {
   return x < 0 || y < 0 || x >= gridW || y >= gridH;
-}
+};
 
 export const create2DNumber = (x: number, y: number): number[][] => {
   const newArray = new Array(x);
@@ -13,10 +13,15 @@ export const create2DNumber = (x: number, y: number): number[][] => {
     }
     newArray[i] = yArray;
   }
-  return newArray
-}
+  return newArray;
+};
 
-export const fillMines = (mines: number[][], amount: number, gridW: number, gridH: number): number[][] => {
+export const fillMines = (
+  mines: number[][],
+  amount: number,
+  gridW: number,
+  gridH: number
+): number[][] => {
   let i = 0;
   const filled = cloneDeep(mines);
   while (i < amount) {
@@ -27,9 +32,13 @@ export const fillMines = (mines: number[][], amount: number, gridW: number, grid
     i++;
   }
   return filled;
-}
+};
 
-export const clearMines = (mines: number[][], gridW: number, gridH: number): number[][] => {
+export const clearMines = (
+  mines: number[][],
+  gridW: number,
+  gridH: number
+): number[][] => {
   const filled = cloneDeep(mines);
   for (let i = 0; i < gridW; i++) {
     for (let j = 0; i < gridH; j++) {
@@ -37,7 +46,7 @@ export const clearMines = (mines: number[][], gridW: number, gridH: number): num
     }
   }
   return filled;
-}
+};
 
 export const create2DBoolean = (x: number, y: number): boolean[][] => {
   const newArray = new Array(x);
@@ -48,25 +57,39 @@ export const create2DBoolean = (x: number, y: number): boolean[][] => {
     }
     newArray[i] = yArray;
   }
-  return newArray
-}
+  return newArray;
+};
 
-export const calculateNear = (mines: number[][], x: number, y: number, gridW: number, gridH: number): number => {
+export const calculateNear = (
+  mines: number[][],
+  x: number,
+  y: number,
+  gridW: number,
+  gridH: number
+): number => {
   if (outBounds(x, y, gridW, gridH)) return 0;
   let i = 0;
   for (let offsetX = -1; offsetX <= 1; offsetX++) {
     for (let offsetY = -1; offsetY <= 1; offsetY++) {
+      if (outBounds(offsetX + x, offsetY + y, gridW, gridH)) continue;
       i += mines[offsetX + x][offsetY + y];
     }
   }
   return i;
-}
+};
 
-export const reveal = (revealed: boolean[][], mines: number[][], x: number, y: number, gridW: number, gridH: number): void => {
-  if (outBounds(x, y, gridW, gridH)) return;
-  if (revealed[x][y]) return;
+export const reveal = (
+  revealed: boolean[][],
+  mines: number[][],
+  x: number,
+  y: number,
+  gridW: number,
+  gridH: number
+): boolean[][] => {
+  if (outBounds(x, y, gridW, gridH)) return revealed;
+  if (revealed[x][y]) return revealed;
   revealed[x][y] = true;
-  if (calculateNear(mines, x, y, gridW, gridH) !== 0) return;
+  if (calculateNear(mines, x, y, gridW, gridH) !== 0) return revealed;
   reveal(revealed, mines, x - 1, y - 1, gridW, gridH);
   reveal(revealed, mines, x - 1, y + 1, gridW, gridH);
   reveal(revealed, mines, x + 1, y - 1, gridW, gridH);
@@ -75,4 +98,5 @@ export const reveal = (revealed: boolean[][], mines: number[][], x: number, y: n
   reveal(revealed, mines, x + 1, y, gridW, gridH);
   reveal(revealed, mines, x, y - 1, gridW, gridH);
   reveal(revealed, mines, x, y + 1, gridW, gridH);
-}
+  return revealed;
+};
