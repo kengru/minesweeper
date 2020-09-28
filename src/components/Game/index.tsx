@@ -22,9 +22,10 @@ const styles = StyleSheet.create({
   },
   startButton: {
     margin: "1em",
+    marginLeft: "3em",
     height: "5%",
-    width: "6%",
-    fontSize: "1.2em",
+    width: "8%",
+    fontSize: "0.7em",
     justifySelf: "flex-end"
   },
   grid: {
