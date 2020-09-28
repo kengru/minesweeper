@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { StyleSheet, css } from "aphrodite";
 
 import Flag from "../../../images/flagIcon.svg";
@@ -33,21 +33,18 @@ interface Props {
 }
 
 export const Space = (props: Props) => {
-  const { x, y, mine, flag, revealed, checkMine, setFlag } = props;
+  const { x, y, flag, revealed, checkMine, setFlag } = props;
 
-  const leftClicked = useCallback(() => {
+  const leftClicked = () => {
     checkMine(x, y);
     console.log(`LeftClicked: ${x} ${y}`);
-  }, [x, y]);
+  };
 
-  const rightClicked = useCallback(
-    (event) => {
-      event.preventDefault();
-      setFlag(x, y);
-      console.log(`RightClicked: ${x} ${y}`);
-    },
-    [x, y, setFlag]
-  );
+  const rightClicked = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setFlag(x, y);
+    console.log(`RightClicked: ${x} ${y}`);
+  };
 
   return (
     <div

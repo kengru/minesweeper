@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useReducer } from "react";
 import { StyleSheet, css } from "aphrodite";
 import { cloneDeep } from "lodash";
 
@@ -31,6 +31,47 @@ const styles = StyleSheet.create({
   }
 });
 
+type Message =
+  | {
+      type: "setRevealed";
+      revealed: boolean[][];
+    }
+  | {
+      type: "setFlags";
+      flags: boolean[][];
+    }
+  | {
+      type: "setDifficulty";
+      state: State;
+    };
+
+function shouldNever(_: never) {
+  throw new Error(`Error: ${_}`);
+}
+
+function reducer(prev: State, msg: Message): State {
+  switch (msg.type) {
+    case "setRevealed": {
+      return {
+        ...prev,
+        revealed: msg.revealed
+      };
+    }
+    case "setFlags": {
+      return {
+        ...prev,
+        flags: msg.flags
+      };
+    }
+    case "setDifficulty": {
+      return msg.state;
+    }
+    default:
+      shouldNever(msg);
+      return prev;
+  }
+}
+
 interface Props {
   level: Levels;
   changePlayingState: (playState: PlayingState) => void;
@@ -46,31 +87,43 @@ export interface State {
 }
 
 export const Game = (props: Props) => {
-  const [state, setState] = useState<State>(BeginnerState);
+  const [state, dispatch] = useReducer(reducer, BeginnerState);
 
   useEffect(() => {
     switch (props.level) {
       case Levels.Beginner:
-        setState(BeginnerState);
+        dispatch({
+          type: "setDifficulty",
+          state: BeginnerState
+        });
         break;
       case Levels.Intermediate:
-        setState(IntermediateState);
+        dispatch({
+          type: "setDifficulty",
+          state: IntermediateState
+        });
         break;
       case Levels.Expert:
-        setState(ExpertState);
+        dispatch({
+          type: "setDifficulty",
+          state: ExpertState
+        });
         break;
       default:
     }
   }, [props.level]);
 
-  const setFlag = (x: number, y: number) => {
-    const newFlags = cloneDeep(state.flags);
-    newFlags[x][y] = !newFlags[x][y];
-    setState({
-      ...state,
-      flags: newFlags
-    });
-  };
+  const setFlag = useCallback(
+    (x: number, y: number) => {
+      const newFlags = cloneDeep(state.flags);
+      newFlags[x][y] = !newFlags[x][y];
+      dispatch({
+        type: "setFlags",
+        flags: newFlags
+      });
+    },
+    [state.flags]
+  );
 
   const checkMine = useCallback(
     (x: number, y: number) => {
@@ -85,26 +138,35 @@ export const Game = (props: Props) => {
           state.gridW,
           state.gridH
         );
-        setState({
-          ...state,
+        dispatch({
+          type: "setRevealed",
           revealed: newRevealed
         });
       }
     },
-    [state]
+    [state.revealed, state.mines, state.gridW, state.gridH]
   );
 
   const resetGame = () => {
     props.changePlayingState(PlayingState.Playing);
     switch (props.level) {
       case Levels.Beginner:
-        setState(BeginnerState);
+        dispatch({
+          type: "setDifficulty",
+          state: BeginnerState
+        });
         break;
       case Levels.Intermediate:
-        setState(IntermediateState);
+        dispatch({
+          type: "setDifficulty",
+          state: IntermediateState
+        });
         break;
       case Levels.Expert:
-        setState(ExpertState);
+        dispatch({
+          type: "setDifficulty",
+          state: ExpertState
+        });
         break;
       default:
     }
