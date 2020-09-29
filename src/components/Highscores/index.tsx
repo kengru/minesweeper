@@ -10,7 +10,10 @@ const styles = StyleSheet.create({
     height: "100%",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    "@media (max-width: 800px)": {
+      display: "none"
+    }
   }
 });
 

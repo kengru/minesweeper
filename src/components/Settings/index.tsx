@@ -6,7 +6,10 @@ import { Levels } from "../../App";
 const styles = StyleSheet.create({
   settings: {
     height: "100%",
-    width: "15%"
+    width: "15%",
+    "@media (max-width: 800px)": {
+      display: "none"
+    }
   },
   form: {
     display: "flex",

@@ -18,19 +18,23 @@ const styles = StyleSheet.create({
     height: "100%",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    "@media (max-width: 800px)": {
+      width: "100%"
+    }
   },
   startButton: {
-    margin: "1em",
-    marginLeft: "3em",
+    margin: "3em 1em 1em 1em",
     height: "5%",
-    width: "8%",
+    width: "86px",
     fontSize: "0.7em",
     justifySelf: "flex-end"
   },
   grid: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    border: "2px solid #EEE",
+    borderRadius: "4px"
   }
 });
 

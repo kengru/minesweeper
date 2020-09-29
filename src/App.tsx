@@ -111,7 +111,7 @@ export const App = () => {
         <Highscores level={state.level} scores={state.scores} />
       </main>
       <footer className={css(styles.footer)}>
-        <h6>kengru</h6>
+        <h5>kengru</h5>
       </footer>
     </div>
   );
