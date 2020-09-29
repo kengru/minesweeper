@@ -4,13 +4,14 @@ import { cloneDeep } from "lodash";
 
 import { Levels, PlayingState } from "../../App";
 import { Row } from "./Row";
-import { reveal } from "../../utils/functions";
+import { checkWin, reveal } from "../../utils/functions";
 import {
   BeginnerState,
   IntermediateState,
   ExpertState,
   resetLevels
 } from "../../utils/difficulty-data";
+import { Modal } from "../Modal";
 
 const styles = StyleSheet.create({
   game: {
@@ -51,6 +52,15 @@ type Message =
   | {
       type: "setDifficulty";
       state: State;
+    }
+  | {
+      type: "gameWon";
+    }
+  | {
+      type: "gameLost";
+    }
+  | {
+      type: "closeModal";
     };
 
 function shouldNever(_: never) {
@@ -72,7 +82,36 @@ function reducer(prev: State, msg: Message): State {
       };
     }
     case "setDifficulty": {
-      return msg.state;
+      return {
+        ...prev,
+        numMines: msg.state.numMines,
+        gridH: msg.state.gridH,
+        gridW: msg.state.gridW,
+        flags: msg.state.flags,
+        mines: msg.state.mines,
+        revealed: msg.state.revealed,
+        seconds: 0
+      };
+    }
+    case "gameWon": {
+      return {
+        ...prev,
+        modalOpen: true,
+        message: "You have won!"
+      };
+    }
+    case "gameLost": {
+      return {
+        ...prev,
+        modalOpen: true,
+        message: "You lost!"
+      };
+    }
+    case "closeModal": {
+      return {
+        ...prev,
+        modalOpen: false
+      };
     }
     default:
       shouldNever(msg);
@@ -94,6 +133,8 @@ export interface State {
   mines: number[][];
   flags: boolean[][];
   revealed: boolean[][];
+  modalOpen: boolean;
+  message: string;
 }
 
 export const Game = (props: Props) => {
@@ -167,7 +208,7 @@ export const Game = (props: Props) => {
   const checkMine = useCallback(
     (x: number, y: number) => {
       if (state.mines[x][y]) {
-        alert("Game over!");
+        dispatch({ type: "gameLost" });
         resetGame();
       } else {
         const newRevealed = reveal(
@@ -182,10 +223,22 @@ export const Game = (props: Props) => {
           type: "setRevealed",
           revealed: newRevealed
         });
+        if (checkWin(newRevealed, state.numMines)) {
+          dispatch({ type: "gameWon" });
+        }
       }
     },
-    [state.revealed, state.mines, state.gridW, state.gridH, resetGame]
+    [
+      state.revealed,
+      state.mines,
+      state.numMines,
+      state.gridW,
+      state.gridH,
+      resetGame
+    ]
   );
+
+  const closeModal = useCallback(() => dispatch({ type: "closeModal" }), []);
 
   const preventContext = (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -206,6 +259,11 @@ export const Game = (props: Props) => {
 
   return (
     <div onContextMenu={preventContext} className={css(styles.game)}>
+      <Modal
+        open={state.modalOpen}
+        message={state.message}
+        close={closeModal}
+      />
       <div className={css(styles.grid)}>{rows}</div>
       <button className={css(styles.startButton)} onClick={() => resetGame()}>
         Restart

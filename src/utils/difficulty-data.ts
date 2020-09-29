@@ -5,6 +5,8 @@ import { Levels } from "../App";
 export const BeginnerState: State = {
   seconds: 0,
   playing: false,
+  modalOpen: false,
+  message: "",
   gridH: 9,
   gridW: 9,
   numMines: 10,
@@ -16,6 +18,8 @@ export const BeginnerState: State = {
 export const IntermediateState: State = {
   seconds: 0,
   playing: false,
+  modalOpen: false,
+  message: "",
   gridH: 16,
   gridW: 16,
   numMines: 40,
@@ -27,6 +31,8 @@ export const IntermediateState: State = {
 export const ExpertState: State = {
   seconds: 0,
   playing: false,
+  modalOpen: false,
+  message: "",
   gridH: 16,
   gridW: 30,
   numMines: 99,
@@ -45,7 +51,7 @@ export const resetLevels = (level: Levels) => {
     case Levels.Intermediate:
       IntermediateState.mines = fillMines(create2DNumber(16, 16), 40, 16, 16);
       IntermediateState.flags = create2DBoolean(16, 16);
-      IntermediateState.revealed = create2DBoolean(9, 9);
+      IntermediateState.revealed = create2DBoolean(16, 16);
       break;
     case Levels.Expert:
       ExpertState.mines = fillMines(create2DNumber(30, 16), 99, 30, 16);

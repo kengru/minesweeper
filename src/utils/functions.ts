@@ -100,3 +100,15 @@ export const reveal = (
   reveal(revealed, mines, x, y + 1, gridW, gridH);
   return revealed;
 };
+
+export const checkWin = (revealed: boolean[][], numMines: number): boolean => {
+  let counter = 0;
+  for (let i = 0; i < revealed.length; i++) {
+    for (let j = 0; j < revealed[i].length; j++) {
+      if (!revealed[i][j]) {
+        counter++;
+      }
+    }
+  }
+  return counter === numMines;
+};

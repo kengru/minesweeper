@@ -10,18 +10,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: "0.06em",
     height: "2em",
-    width: "2em"
-  },
-  default: {
-    backgroundColor: "#BDBDBD"
+    width: "2em",
+    backgroundColor: "#BDBDBD",
+    transition: "background-color 500ms linear"
   },
   flag: {
     backgroundImage: `url(${Flag})`,
     backgroundPosition: "center",
-    backgroundRepeat: "no-repeat"
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "20px 20px"
   },
   revealed: {
-    backgroundColor: "#E3DCDC"
+    backgroundColor: "#E3DCDC",
+    transition: "background-color 150ms linear"
   },
   one: {
     color: "#00BFFF"
@@ -55,12 +56,12 @@ export const Space = (props: Props) => {
   const { x, y, nearValue, flag, revealed, checkMine, setFlag } = props;
 
   const leftClicked = () => {
-    checkMine(x, y);
+    if (!flag) checkMine(x, y);
   };
 
   const rightClicked = (event: React.MouseEvent) => {
     event.preventDefault();
-    setFlag(x, y);
+    if (!revealed) setFlag(x, y);
   };
 
   const spaceColor: object | null = useMemo(() => {
@@ -86,10 +87,9 @@ export const Space = (props: Props) => {
       onContextMenu={rightClicked}
       className={css(
         styles.space,
-        styles.default,
         spaceColor,
-        flag ? styles.flag : styles.space,
-        revealed ? styles.revealed : styles.space
+        flag ? styles.flag : null,
+        revealed ? styles.revealed : null
       )}
     >
       {revealed ? (nearValue !== 0 ? nearValue : "") : ""}
