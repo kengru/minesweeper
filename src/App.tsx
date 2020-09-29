@@ -19,7 +19,10 @@ const styles = StyleSheet.create({
     height: "15%",
     fontSize: "3em",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    "@media (max-width: 800px)": {
+      fontSize: "2em"
+    }
   },
   main: {
     display: "flex",
@@ -111,7 +114,7 @@ export const App = () => {
         <Highscores level={state.level} scores={state.scores} />
       </main>
       <footer className={css(styles.footer)}>
-        <h5>kengru</h5>
+        <h4>kengru</h4>
       </footer>
     </div>
   );
