@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect, MutableRefObject } from "react";
 import { StyleSheet, css } from "aphrodite";
 
 const styles = StyleSheet.create({
@@ -35,6 +35,19 @@ interface Props {
 
 export const Modal = (props: Props) => {
   const { open, message, close } = props;
+  const paperRef = useRef(HTMLDivElement);
+
+  function useClickedOutside(ref: MutableRefObject<HTMLDivElement>) {
+    useEffect(() => {
+      function handleClickOutside(event: React.MouseEvent) {
+        if (ref.current && !ref.current.contains(event.currentTarget)) {
+          close();
+        }
+      }
+
+      document.addEventListener("mousedown", handleClickOutside);
+    });
+  }
 
   return (
     <div
