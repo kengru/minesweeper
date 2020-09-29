@@ -1,16 +1,17 @@
-import React, { useRef, useEffect, MutableRefObject } from "react";
+import React, { useRef, useEffect } from "react";
 import { StyleSheet, css } from "aphrodite";
 
 const styles = StyleSheet.create({
   modal: {
     display: "flex",
     position: "absolute",
+    top: "0px",
     width: "100%",
-    height: "105%",
+    height: "100%",
     margin: "auto",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(180, 180, 180, 0.40)"
+    backgroundColor: "rgba(180, 180, 180, 0.40)",
   },
   paper: {
     display: "flex",
@@ -20,11 +21,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: "1em",
-    backgroundColor: "#F4F4F4"
+    backgroundColor: "#F4F4F4",
   },
   hidden: {
-    display: "none"
-  }
+    display: "none",
+  },
 });
 
 interface Props {
@@ -35,26 +36,28 @@ interface Props {
 
 export const Modal = (props: Props) => {
   const { open, message, close } = props;
-  const paperRef = useRef(HTMLDivElement);
+  const paperRef = useRef<HTMLDivElement>(null);
 
-  function useClickedOutside(ref: MutableRefObject<HTMLDivElement>) {
+  const useClickedOutside = (ref: React.RefObject<HTMLDivElement>) => {
     useEffect(() => {
-      function handleClickOutside(event: React.MouseEvent) {
-        if (ref.current && !ref.current.contains(event.currentTarget)) {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (ref.current && !ref.current.contains(event.target as Node)) {
           close();
         }
-      }
+      };
 
       document.addEventListener("mousedown", handleClickOutside);
-    });
-  }
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  };
+
+  useClickedOutside(paperRef);
 
   return (
-    <div
-      className={css(open ? styles.modal : styles.hidden)}
-      onClick={() => close()}
-    >
-      <div className={css(styles.paper)}>
+    <div className={css(open ? styles.modal : styles.hidden)}>
+      <div ref={paperRef} className={css(styles.paper)}>
         <h3>{message}</h3>
       </div>
     </div>
