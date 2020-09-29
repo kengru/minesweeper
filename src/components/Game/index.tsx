@@ -8,7 +8,8 @@ import { reveal } from "../../utils/functions";
 import {
   BeginnerState,
   IntermediateState,
-  ExpertState
+  ExpertState,
+  resetLevels
 } from "../../utils/difficulty-data";
 
 const styles = StyleSheet.create({
@@ -85,6 +86,8 @@ interface Props {
 }
 
 export interface State {
+  seconds: number;
+  playing: boolean;
   gridW: number;
   gridH: number;
   numMines: number;
@@ -95,9 +98,10 @@ export interface State {
 
 export const Game = (props: Props) => {
   const [state, dispatch] = useReducer(reducer, BeginnerState);
+  const { level, changePlayingState } = props;
 
   useEffect(() => {
-    switch (props.level) {
+    switch (level) {
       case Levels.Beginner:
         dispatch({
           type: "setDifficulty",
@@ -118,7 +122,7 @@ export const Game = (props: Props) => {
         break;
       default:
     }
-  }, [props.level]);
+  }, [level]);
 
   const setFlag = useCallback(
     (x: number, y: number) => {
@@ -132,10 +136,39 @@ export const Game = (props: Props) => {
     [state.flags]
   );
 
+  const resetGame = useCallback(() => {
+    changePlayingState(PlayingState.Playing);
+    switch (level) {
+      case Levels.Beginner:
+        resetLevels(Levels.Beginner);
+        dispatch({
+          type: "setDifficulty",
+          state: BeginnerState
+        });
+        break;
+      case Levels.Intermediate:
+        resetLevels(Levels.Intermediate);
+        dispatch({
+          type: "setDifficulty",
+          state: IntermediateState
+        });
+        break;
+      case Levels.Expert:
+        resetLevels(Levels.Expert);
+        dispatch({
+          type: "setDifficulty",
+          state: ExpertState
+        });
+        break;
+      default:
+    }
+  }, [level, changePlayingState]);
+
   const checkMine = useCallback(
     (x: number, y: number) => {
       if (state.mines[x][y]) {
-        console.log("explosions");
+        alert("Game over!");
+        resetGame();
       } else {
         const newRevealed = reveal(
           cloneDeep(state.revealed),
@@ -151,33 +184,8 @@ export const Game = (props: Props) => {
         });
       }
     },
-    [state.revealed, state.mines, state.gridW, state.gridH]
+    [state.revealed, state.mines, state.gridW, state.gridH, resetGame]
   );
-
-  const resetGame = () => {
-    props.changePlayingState(PlayingState.Playing);
-    switch (props.level) {
-      case Levels.Beginner:
-        dispatch({
-          type: "setDifficulty",
-          state: BeginnerState
-        });
-        break;
-      case Levels.Intermediate:
-        dispatch({
-          type: "setDifficulty",
-          state: IntermediateState
-        });
-        break;
-      case Levels.Expert:
-        dispatch({
-          type: "setDifficulty",
-          state: ExpertState
-        });
-        break;
-      default:
-    }
-  };
 
   const preventContext = (event: { preventDefault: () => void }) => {
     event.preventDefault();
