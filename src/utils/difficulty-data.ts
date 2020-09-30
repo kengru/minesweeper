@@ -4,7 +4,6 @@ import { Levels } from "../App";
 
 export const BeginnerState: State = {
   seconds: 0,
-  playing: false,
   modalOpen: false,
   message: "",
   gridH: 9,
@@ -17,7 +16,6 @@ export const BeginnerState: State = {
 
 export const IntermediateState: State = {
   seconds: 0,
-  playing: false,
   modalOpen: false,
   message: "",
   gridH: 16,
@@ -30,7 +28,6 @@ export const IntermediateState: State = {
 
 export const ExpertState: State = {
   seconds: 0,
-  playing: false,
   modalOpen: false,
   message: "",
   gridH: 16,

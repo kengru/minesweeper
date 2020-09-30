@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     margin: "auto",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(180, 180, 180, 0.40)",
+    backgroundColor: "rgba(180, 180, 180, 0.40)"
   },
   paper: {
     display: "flex",
@@ -21,11 +21,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: "1em",
-    backgroundColor: "#F4F4F4",
+    backgroundColor: "#F4F4F4"
   },
   hidden: {
-    display: "none",
-  },
+    display: "none"
+  }
 });
 
 interface Props {

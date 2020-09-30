@@ -4,7 +4,7 @@ import { cloneDeep } from "lodash";
 
 import { Levels, PlayingState } from "../../App";
 import { Row } from "./Row";
-import { checkWin, reveal } from "../../utils/functions";
+import { checkStartPlay, checkWin, reveal } from "../../utils/functions";
 import {
   BeginnerState,
   IntermediateState,
@@ -61,6 +61,9 @@ type Message =
     }
   | {
       type: "closeModal";
+    }
+  | {
+      type: "increaseSeconds";
     };
 
 function shouldNever(_: never) {
@@ -96,21 +99,29 @@ function reducer(prev: State, msg: Message): State {
     case "gameWon": {
       return {
         ...prev,
+        seconds: 0,
         modalOpen: true,
-        message: "You have won!"
+        message: `You have won in ${prev.seconds} seconds!`
       };
     }
     case "gameLost": {
       return {
         ...prev,
+        seconds: 0,
         modalOpen: true,
-        message: "You lost!"
+        message: `You lost in ${prev.seconds} seconds!`
       };
     }
     case "closeModal": {
       return {
         ...prev,
         modalOpen: false
+      };
+    }
+    case "increaseSeconds": {
+      return {
+        ...prev,
+        seconds: prev.seconds + 1
       };
     }
     default:
@@ -121,12 +132,12 @@ function reducer(prev: State, msg: Message): State {
 
 interface Props {
   level: Levels;
+  playingState: PlayingState;
   changePlayingState: (playState: PlayingState) => void;
 }
 
 export interface State {
   seconds: number;
-  playing: boolean;
   gridW: number;
   gridH: number;
   numMines: number;
@@ -139,7 +150,9 @@ export interface State {
 
 export const Game = (props: Props) => {
   const [state, dispatch] = useReducer(reducer, BeginnerState);
-  const { level, changePlayingState } = props;
+  const { level, playingState, changePlayingState } = props;
+
+  const increaseSecs = () => dispatch({ type: "increaseSeconds" });
 
   useEffect(() => {
     switch (level) {
@@ -165,6 +178,16 @@ export const Game = (props: Props) => {
     }
   }, [level]);
 
+  useEffect(() => {
+    let timer: number = 0;
+    if (playingState === PlayingState.Playing) {
+      timer = window.setInterval(() => increaseSecs(), 1000);
+    } else {
+      window.clearInterval(timer);
+    }
+    return () => clearInterval(timer);
+  }, [playingState]);
+
   const setFlag = useCallback(
     (x: number, y: number) => {
       const newFlags = cloneDeep(state.flags);
@@ -178,7 +201,7 @@ export const Game = (props: Props) => {
   );
 
   const resetGame = useCallback(() => {
-    changePlayingState(PlayingState.Playing);
+    changePlayingState(PlayingState.NotPlaying);
     switch (level) {
       case Levels.Beginner:
         resetLevels(Levels.Beginner);
@@ -207,6 +230,9 @@ export const Game = (props: Props) => {
 
   const checkMine = useCallback(
     (x: number, y: number) => {
+      if (checkStartPlay(state.revealed)) {
+        changePlayingState(PlayingState.Playing);
+      }
       if (state.mines[x][y]) {
         dispatch({ type: "gameLost" });
         resetGame();
@@ -231,9 +257,10 @@ export const Game = (props: Props) => {
     [
       state.revealed,
       state.mines,
-      state.numMines,
       state.gridW,
       state.gridH,
+      state.numMines,
+      changePlayingState,
       resetGame
     ]
   );

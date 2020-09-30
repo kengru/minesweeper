@@ -16,6 +16,18 @@ export const create2DNumber = (x: number, y: number): number[][] => {
   return newArray;
 };
 
+export const create2DBoolean = (x: number, y: number): boolean[][] => {
+  const newArray = new Array(x);
+  for (let i = 0; i < x; i++) {
+    const yArray = [];
+    for (let j = 0; j < y; j++) {
+      yArray.push(false);
+    }
+    newArray[i] = yArray;
+  }
+  return newArray;
+};
+
 export const fillMines = (
   mines: number[][],
   amount: number,
@@ -46,18 +58,6 @@ export const clearMines = (
     }
   }
   return filled;
-};
-
-export const create2DBoolean = (x: number, y: number): boolean[][] => {
-  const newArray = new Array(x);
-  for (let i = 0; i < x; i++) {
-    const yArray = [];
-    for (let j = 0; j < y; j++) {
-      yArray.push(false);
-    }
-    newArray[i] = yArray;
-  }
-  return newArray;
 };
 
 export const calculateNear = (
@@ -111,4 +111,15 @@ export const checkWin = (revealed: boolean[][], numMines: number): boolean => {
     }
   }
   return counter === numMines;
+};
+
+export const checkStartPlay = (revealed: boolean[][]): boolean => {
+  for (let i = 0; i < revealed.length; i++) {
+    for (let j = 0; j < revealed[i].length; j++) {
+      if (revealed[i][j]) {
+        return false;
+      }
+    }
+  }
+  return true;
 };

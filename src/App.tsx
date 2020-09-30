@@ -110,7 +110,11 @@ export const App = () => {
       <header className={css(styles.header)}>Minesweeper</header>
       <main className={css(styles.main)}>
         <Settings level={state.level} changeDifficulty={changeDifficulty} />
-        <Game level={state.level} changePlayingState={changePlayState} />
+        <Game
+          level={state.level}
+          playingState={state.playing}
+          changePlayingState={changePlayState}
+        />
         <Highscores level={state.level} scores={state.scores} />
       </main>
       <footer className={css(styles.footer)}>
