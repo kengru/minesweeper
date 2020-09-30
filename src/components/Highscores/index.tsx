@@ -6,12 +6,12 @@ import { Levels, Score } from "../../App";
 const styles = StyleSheet.create({
   highscores: {
     display: "flex",
-    width: "15%",
+    width: "20%",
     height: "100%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    "@media (max-width: 800px)": {
+    "@media (max-width: 900px)": {
       display: "none"
     }
   }

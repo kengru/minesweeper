@@ -6,8 +6,8 @@ import { Levels } from "../../App";
 const styles = StyleSheet.create({
   settings: {
     height: "100%",
-    width: "15%",
-    "@media (max-width: 800px)": {
+    width: "20%",
+    "@media (max-width: 900px)": {
       display: "none"
     }
   },
@@ -25,7 +25,10 @@ const styles = StyleSheet.create({
   radioLabel: {
     display: "flex",
     alignItems: "center",
-    fontSize: "1.5em"
+    fontSize: "1.5em",
+    "@media (max-width: 1200px)": {
+      fontSize: "1em"
+    }
   },
   radioInput: {
     height: "2.2em",

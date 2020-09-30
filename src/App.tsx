@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
 
 export enum Levels {
   Beginner = "Beginner",
-  Intermediate = "Intermediate",
-  Expert = "Expert"
+  Intermediate = "Intermediate"
+  // Expert = "Expert"
 }
 
 export enum PlayingState {

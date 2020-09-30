@@ -50,11 +50,11 @@ export const resetLevels = (level: Levels) => {
       IntermediateState.flags = create2DBoolean(16, 16);
       IntermediateState.revealed = create2DBoolean(16, 16);
       break;
-    case Levels.Expert:
-      ExpertState.mines = fillMines(create2DNumber(30, 16), 99, 30, 16);
-      ExpertState.flags = create2DBoolean(30, 16);
-      ExpertState.revealed = create2DBoolean(30, 16);
-      break;
+    // case Levels.Expert:
+    //   ExpertState.mines = fillMines(create2DNumber(30, 16), 99, 30, 16);
+    //   ExpertState.flags = create2DBoolean(30, 16);
+    //   ExpertState.revealed = create2DBoolean(30, 16);
+    //   break;
     default:
   }
 };

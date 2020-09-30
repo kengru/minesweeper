@@ -8,7 +8,6 @@ import { checkStartPlay, checkWin, reveal } from "../../utils/functions";
 import {
   BeginnerState,
   IntermediateState,
-  ExpertState,
   resetLevels
 } from "../../utils/difficulty-data";
 import { Modal } from "../Modal";
@@ -16,12 +15,12 @@ import { Modal } from "../Modal";
 const styles = StyleSheet.create({
   game: {
     display: "flex",
-    width: "70%",
+    width: "60%",
     height: "100%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    "@media (max-width: 800px)": {
+    "@media (max-width: 900px)": {
       width: "100%"
     }
   },
@@ -155,6 +154,7 @@ export const Game = (props: Props) => {
   const increaseSecs = () => dispatch({ type: "increaseSeconds" });
 
   useEffect(() => {
+    changePlayingState(PlayingState.NotPlaying);
     switch (level) {
       case Levels.Beginner:
         dispatch({
@@ -168,15 +168,15 @@ export const Game = (props: Props) => {
           state: IntermediateState
         });
         break;
-      case Levels.Expert:
-        dispatch({
-          type: "setDifficulty",
-          state: ExpertState
-        });
-        break;
+      // case Levels.Expert:
+      //   dispatch({
+      //     type: "setDifficulty",
+      //     state: ExpertState
+      //   });
+      //   break;
       default:
     }
-  }, [level]);
+  }, [level, changePlayingState]);
 
   useEffect(() => {
     let timer: number = 0;
@@ -217,13 +217,13 @@ export const Game = (props: Props) => {
           state: IntermediateState
         });
         break;
-      case Levels.Expert:
-        resetLevels(Levels.Expert);
-        dispatch({
-          type: "setDifficulty",
-          state: ExpertState
-        });
-        break;
+      // case Levels.Expert:
+      //   resetLevels(Levels.Expert);
+      //   dispatch({
+      //     type: "setDifficulty",
+      //     state: ExpertState
+      //   });
+      //   break;
       default:
     }
   }, [level, changePlayingState]);
