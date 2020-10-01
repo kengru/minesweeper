@@ -102,15 +102,14 @@ export const reveal = (
 };
 
 export const checkWin = (revealed: boolean[][], numMines: number): boolean => {
-  let counter = 0;
-  for (let i = 0; i < revealed.length; i++) {
-    for (let j = 0; j < revealed[i].length; j++) {
-      if (!revealed[i][j]) {
-        counter++;
-      }
-    }
-  }
-  return counter === numMines;
+  return (
+    revealed.reduce((prev, widthArr) => {
+      return (
+        prev +
+        widthArr.reduce((previous, value) => previous + (value ? 0 : 1), 0)
+      );
+    }, 0) === numMines
+  );
 };
 
 export const checkStartPlay = (revealed: boolean[][]): boolean => {
