@@ -46,11 +46,9 @@ export const Modal = (props: Props) => {
           close();
         }
       };
-
       document.addEventListener("mousedown", handleClickOutside);
-      return () => {
+      return () =>
         document.removeEventListener("mousedown", handleClickOutside);
-      };
     }, [ref]);
   };
 

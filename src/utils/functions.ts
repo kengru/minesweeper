@@ -123,3 +123,15 @@ export const checkStartPlay = (revealed: boolean[][]): boolean => {
   }
   return true;
 };
+
+export const minesLeft = (flags: boolean[][], numMines: number): number => {
+  return (
+    numMines -
+    flags.reduce((prev, widthArr) => {
+      return (
+        prev +
+        widthArr.reduce((previous, value) => previous + (value ? 1 : 0), 0)
+      );
+    }, 0)
+  );
+};

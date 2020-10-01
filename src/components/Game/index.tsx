@@ -1,10 +1,15 @@
-import React, { useEffect, useCallback, useReducer } from "react";
+import React, { useEffect, useCallback, useReducer, useMemo } from "react";
 import { StyleSheet, css } from "aphrodite";
 import { cloneDeep } from "lodash";
 
 import { Levels, PlayingState } from "../../App";
 import { Row } from "./Row";
-import { checkStartPlay, checkWin, reveal } from "../../utils/functions";
+import {
+  checkStartPlay,
+  checkWin,
+  minesLeft,
+  reveal
+} from "../../utils/functions";
 import {
   BeginnerState,
   IntermediateState,
@@ -35,7 +40,14 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     border: "2px solid #EEE",
-    borderRadius: "4px"
+    borderRadius: "4px",
+    marginTop: "1em"
+  },
+  minesLeft: {
+    marginRight: "10em"
+  },
+  minesNumber: {
+    color: "#D00"
   }
 });
 
@@ -151,8 +163,6 @@ export const Game = (props: Props) => {
   const [state, dispatch] = useReducer(reducer, BeginnerState);
   const { level, playingState, changePlayingState } = props;
 
-  const increaseSecs = () => dispatch({ type: "increaseSeconds" });
-
   useEffect(() => {
     changePlayingState(PlayingState.NotPlaying);
     switch (level) {
@@ -181,7 +191,10 @@ export const Game = (props: Props) => {
   useEffect(() => {
     let timer: number = 0;
     if (playingState === PlayingState.Playing) {
-      timer = window.setInterval(() => increaseSecs(), 1000);
+      timer = window.setInterval(
+        () => dispatch({ type: "increaseSeconds" }),
+        1000
+      );
     } else {
       window.clearInterval(timer);
     }
@@ -265,6 +278,11 @@ export const Game = (props: Props) => {
     ]
   );
 
+  const mines = useMemo(() => minesLeft(state.flags, state.numMines), [
+    state.flags,
+    state.numMines
+  ]);
+
   const closeModal = useCallback(() => dispatch({ type: "closeModal" }), []);
 
   const preventContext = (event: { preventDefault: () => void }) => {
@@ -291,6 +309,9 @@ export const Game = (props: Props) => {
         message={state.message}
         close={closeModal}
       />
+      <div className={css(styles.minesLeft)}>
+        Mines left: <span className={css(styles.minesNumber)}>{mines}</span>
+      </div>
       <div className={css(styles.grid)}>{rows}</div>
       <button className={css(styles.startButton)} onClick={() => resetGame()}>
         Restart
