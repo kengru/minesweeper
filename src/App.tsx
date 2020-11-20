@@ -1,12 +1,11 @@
-import React, { useReducer, useCallback } from "react";
+import React, { useReducer, useCallback, useEffect } from "react";
 import { StyleSheet, css } from "aphrodite";
 import { Settings } from "./components/Settings";
 import { Game } from "./components/Game";
 import { Highscores } from "./components/Highscores";
 
-import { changeLevel, changePState } from "./utils/messages";
-
-type Message = changeLevel | changePState;
+import { odin } from "./utils/axios";
+import { Message } from "./utils/messages";
 
 const styles = StyleSheet.create({
   app: {
@@ -72,6 +71,20 @@ function reducer(prev: State, msg: Message): State {
         ...prev,
         playing: msg.action
       };
+    case "getScs":
+      return {
+        ...prev,
+        scores: msg.action
+      };
+    case "addScs":
+      const newScores = [...prev.scores, msg.action];
+      newScores.sort((prev, next) =>
+        prev.time < next.time ? -1 : prev.time > next.time ? 1 : 0
+      );
+      return {
+        ...prev,
+        scores: newScores
+      };
     default:
       return prev;
   }
@@ -80,22 +93,43 @@ function reducer(prev: State, msg: Message): State {
 const initialState: State = {
   level: Levels.Beginner,
   playing: PlayingState.NotPlaying,
-  scores: [
-    {
-      name: "ken",
-      time: 12,
-      level: Levels.Beginner
-    },
-    {
-      name: "laura",
-      time: 15,
-      level: Levels.Beginner
-    }
-  ]
+  scores: []
 };
 
 export const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const scores = await odin.get(`/minesweeper/scores`);
+      dispatch({ type: "getScs", action: scores.data.data as Score[] });
+    };
+
+    fetchItems();
+  }, []);
+
+  const sendScore = useCallback(
+    async (name: string, time: number) => {
+      try {
+        await odin.post(`/minesweeper/scores`, {
+          name,
+          time,
+          level: state.level
+        });
+        dispatch({
+          type: "addScs",
+          action: {
+            name,
+            time,
+            level: state.level
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [state.level]
+  );
 
   const changeDifficulty = useCallback((level: Levels) => {
     dispatch({ type: "chgLvl", action: level });
@@ -113,7 +147,9 @@ export const App = () => {
         <Game
           level={state.level}
           playingState={state.playing}
+          scores={state.scores}
           changePlayingState={changePlayState}
+          sendScore={sendScore}
         />
         <Highscores level={state.level} scores={state.scores} />
       </main>

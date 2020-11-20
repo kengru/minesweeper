@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useReducer, useMemo } from "react";
 import { StyleSheet, css } from "aphrodite";
 import { cloneDeep } from "lodash";
 
-import { Levels, PlayingState } from "../../App";
+import { Levels, PlayingState, Score } from "../../App";
 import { Row } from "./Row";
 import {
   checkStartPlay,
@@ -65,7 +65,10 @@ type Message =
       state: State;
     }
   | {
-      type: "gameWon";
+      type: "gameWonRecord";
+    }
+  | {
+      type: "gameWonNoRecord";
     }
   | {
       type: "gameLost";
@@ -107,7 +110,17 @@ function reducer(prev: State, msg: Message): State {
         seconds: 0
       };
     }
-    case "gameWon": {
+    case "gameWonRecord": {
+      return {
+        ...prev,
+        seconds: 0,
+        modalOpen: true,
+        newRecord: true,
+        endTime: prev.seconds,
+        message: `You have won in ${prev.seconds} seconds!`
+      };
+    }
+    case "gameWonNoRecord": {
       return {
         ...prev,
         seconds: 0,
@@ -126,7 +139,9 @@ function reducer(prev: State, msg: Message): State {
     case "closeModal": {
       return {
         ...prev,
-        modalOpen: false
+        newRecord: false,
+        modalOpen: false,
+        endTime: 0
       };
     }
     case "increaseSeconds": {
@@ -144,7 +159,9 @@ function reducer(prev: State, msg: Message): State {
 interface Props {
   level: Levels;
   playingState: PlayingState;
+  scores: Score[];
   changePlayingState: (playState: PlayingState) => void;
+  sendScore: (name: string, time: number) => Promise<void>;
 }
 
 export interface State {
@@ -157,11 +174,13 @@ export interface State {
   revealed: boolean[][];
   modalOpen: boolean;
   message: string;
+  newRecord: boolean;
+  endTime: number;
 }
 
 export const Game = (props: Props) => {
   const [state, dispatch] = useReducer(reducer, BeginnerState);
-  const { level, playingState, changePlayingState } = props;
+  const { level, playingState, scores, changePlayingState, sendScore } = props;
 
   useEffect(() => {
     changePlayingState(PlayingState.NotPlaying);
@@ -263,7 +282,9 @@ export const Game = (props: Props) => {
           revealed: newRevealed
         });
         if (checkWin(newRevealed, state.numMines)) {
-          dispatch({ type: "gameWon" });
+          scores.some((score) => state.seconds < score.time)
+            ? dispatch({ type: "gameWonRecord" })
+            : dispatch({ type: "gameWonNoRecord" });
         }
       }
     },
@@ -273,6 +294,8 @@ export const Game = (props: Props) => {
       state.gridW,
       state.gridH,
       state.numMines,
+      state.seconds,
+      scores,
       changePlayingState,
       resetGame
     ]
@@ -306,8 +329,11 @@ export const Game = (props: Props) => {
     <div onContextMenu={preventContext} className={css(styles.game)}>
       <Modal
         open={state.modalOpen}
+        time={state.endTime}
         message={state.message}
+        record={state.newRecord}
         close={closeModal}
+        sendScore={sendScore}
       />
       <div className={css(styles.minesLeft)}>
         Mines left: <span className={css(styles.minesNumber)}>{mines}</span>

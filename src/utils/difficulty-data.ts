@@ -11,7 +11,9 @@ export const BeginnerState: State = {
   numMines: 10,
   mines: fillMines(create2DNumber(9, 9), 10, 9, 9),
   flags: create2DBoolean(9, 9),
-  revealed: create2DBoolean(9, 9)
+  revealed: create2DBoolean(9, 9),
+  newRecord: false,
+  endTime: 0
 };
 
 export const IntermediateState: State = {
@@ -23,7 +25,9 @@ export const IntermediateState: State = {
   numMines: 40,
   mines: fillMines(create2DNumber(16, 16), 40, 16, 16),
   flags: create2DBoolean(16, 16),
-  revealed: create2DBoolean(16, 16)
+  revealed: create2DBoolean(16, 16),
+  newRecord: false,
+  endTime: 0
 };
 
 export const ExpertState: State = {
@@ -35,7 +39,9 @@ export const ExpertState: State = {
   numMines: 99,
   mines: fillMines(create2DNumber(30, 16), 99, 30, 16),
   flags: create2DBoolean(30, 16),
-  revealed: create2DBoolean(30, 16)
+  revealed: create2DBoolean(30, 16),
+  newRecord: false,
+  endTime: 0
 };
 
 export const resetLevels = (level: Levels) => {
